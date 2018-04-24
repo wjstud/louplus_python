@@ -46,8 +46,10 @@ def main():
             print(calc_income_tax(income))
         except ValueError as e:
             print(e)
+            exit()
     else:
         print('Parameter len(sys.argv) Error')
+        exit()
 
 if __name__ == '__main__':
     main()

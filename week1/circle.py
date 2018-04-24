@@ -6,3 +6,4 @@ try:
     print(r * r * pi)
 except ValueError as e:
     print('Please a number!!!')
+    exit()

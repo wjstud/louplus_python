@@ -4,4 +4,5 @@ IndexError 对于一个序列，访问的索引超过了序列的范围，可以
 KeyError 访问一个不存在的字典 Key，字典也会在下一节实验中详细讲到，Key 如果不存在字典就会抛出这个异常
 ValueError 传入无效的参数
 AttributeError 访问类对象中不存在的属性
-FileNotFoundError 没有这个文件
+FileNotFoundError 访问的文件找不到
+TypeError 类型错误，例如删除元祖的某个元素

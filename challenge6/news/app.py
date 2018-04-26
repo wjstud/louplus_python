@@ -5,12 +5,13 @@ app = Flask(__name__)
 
 class Files(object):
 
-    directory = os.path.join(os.path.abspath(os.path.dirname(__name__)), '..', 'files')
+    directory = os.path.join(os.path.abspath(os.path.dirname(__name__)), '..', 'files') # 获取files目录路径
 
     def __init__(self):
         self._files = self._read_all_files()
 
     def _read_all_files(self):
+        ''' 循环 files 目录文件以得到所有文件的路径, 读取每个文件内容并以文件名(不带后缀)为键、内容为值存入 result 字典 '''
         result = {}
         for filename in os.listdir(self.directory):
             file_path = os.path.join(self.directory, filename)
@@ -19,9 +20,11 @@ class Files(object):
         return result
 
     def get_title_list(self):
+        ''' 获取所有文件 title '''
         return [item['title'] for item in self._files.values()]
 
     def get_by_filename(self, filename):
+        ''' 获取所有文件内容 '''
         return self._files.get(filename)
 
 files = Files()

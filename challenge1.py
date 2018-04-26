@@ -21,8 +21,8 @@ INCOME_TAX_QUICK_LOOKUP_TABLE = [
         ]
 
 def calc_income_tax(income):
-    '''  计算税额：应纳税所得额 = 工资金额 － 各项社会保险费 - 起征点(3500元)
-              应纳税额 = 应纳税所得额 × 税率 － 速算扣除数
+    '''  计算税额：1、应纳税所得额 = 工资金额 － 各项社会保险费 - 起征点(3500元)
+                   2、应纳税额 = 应纳税所得额 × 税率 － 速算扣除数
     '''
 
     taxable_part = income - SOCIAL_SECUROTY - INCOME_TAX_START_POINT
@@ -36,7 +36,7 @@ def calc_income_tax(income):
             return '{:.2f}'.format(tax) # 保留2位小数
 
 def main():
-    ''' 验证参数 '''
+    ''' 验证参数: 参数必须为数字且参数个数为 1 '''
     
     import sys
     

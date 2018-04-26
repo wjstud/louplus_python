@@ -2,7 +2,8 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template
 
-''' 步骤：创建两张表 文章表files、类别表categories 关系为多对一
+''' 步骤：连接数据库 mysql
+          创建两张表 文章表files、类别表categories 关系为多对一
           创建测试数据 insert_datas函数使用 flask shell 导入并运行
 '''
 

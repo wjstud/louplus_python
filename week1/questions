@@ -1,3 +1,0 @@
-1、默认父类object的源码哪里查看
-2、双下划线怎么访问
- 可以通过obj._classname__attr访问, 例如: f._User__name

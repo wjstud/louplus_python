@@ -1,0 +1,10 @@
+git add .
+git commit -m "*"
+git push [origin] [master]
+git log --oneline
+git remote -v
+git remote add upstream https://github.com/wjstud/louplus_python
+git pull --rebase upstream master # 同步 upstream 主仓库代码
+git reset --hard 版本号 # 回退到指定版本号 --hard 参数必须加上
+git reset --hard HEAD^ ＃回退到上一个版本
+git push -f # 强制 push, 经常用于同步后

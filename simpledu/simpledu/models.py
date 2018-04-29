@@ -14,10 +14,12 @@ class Base(db.Model):
                                         onupdate=datetime.utcnow())
 
 class User(Base, UserMixin):
-# 继承 UserMixin 可以使用 is_authenticated property 方法判断用户是否登录
+# 继承 UserMixin 主要是为了使用它提供的 is_authenticated property 方法判断用户是否是登录状态
     __tablename__ = 'user'
+    """ 用数值表示角色, 方便判断是否有权限, 比如说有个操作要角色为员工
+        及以上的用户才可以做, 那么只要判断 user.role >= ROLE_STAFF 就可
+        以了, 数值之间设置了 10 的间隔是方便以后加入其他角色 """
 
-    # 利用数值表示角色 方便判断 和以后添加角色
     ROLE_USER = 10
     ROLE_STAFF = 20
     ROLE_ADMIN = 30
@@ -25,13 +27,14 @@ class User(Base, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(32), unique=True, index=True, nullable=False)
     email = db.Column(db.String(64), unique=True, index=True, nullable=False)
+    # 默认, sqlalchemy 会以字段名来定义列名, 但这里是 _password 所以需指定数据库表列名为 password
     _password = db.Column('password', db.String(256), nullable=False)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
     job = db.Column(db.String(64))
     publish_courses = db.relationship('Course')
 
     def __repr__(self):
-        return '<User:{}>'.format(self.username)
+        return '<User: {}>'.format(self.username)
 
     @property
     def password(self):

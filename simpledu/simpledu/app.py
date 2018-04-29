@@ -29,6 +29,7 @@ def create_app(config):
 
     app = Flask(__name__)
     app.config.from_object(configs.get(config))
+    # SQLAlchemy 的初始化方式改为使用 init_app
     register_extensions(app)
     register_blueprints(app)
 

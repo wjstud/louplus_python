@@ -2,6 +2,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+from flask import url_for
 
 db = SQLAlchemy()
 
@@ -60,6 +61,30 @@ class Course(Base):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), unique=True, index=True, nullable=False)
+    description = db.Column(db.String(256))
+    image_url = db.Column(db.String(256))
     # ondelete='CASCADE' 表示如果用户被删除了，他的课程也删除
-    author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE')) # 多对一关系
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL')) # 多对一关系
     author = db.relationship('User', uselist=False) # uselist=False 表示通过 relationship 引用时创建为对象而不是列表
+    chapters = db.relationship('Chapter')
+
+    def __repr__(self):
+        return '<Course: {}>'.format(self.name)
+
+    @property
+    def url(self):
+        return url_for('course.detail', course_id=self.id)
+
+class Chapter(Base):
+    __tablename__ = 'chapter'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), unique=True, index=True, nullable=False)
+    description = db.Column(db.String(256))
+    video_url = db.Column(db.String(256))
+    video_duration = db.Column(db.String(24))
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id', ondelete='CASCADE'))
+    course = db.relationship('Course', uselist=False)
+
+    def __repr__(self):
+        return '<Chapter: {}>'.format(self.name)

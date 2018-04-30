@@ -1,4 +1,4 @@
-<!-- 需要传人2个参数：要渲染的 form 和点击提交请求的 url -->
+<!-- 表单 需要传人2个参数：要渲染的 form 和点击提交请求的 url -->
 {% macro render_form(form, url) %}
 <!-- 要在 form 里指定 POST 方法和点击提交后需要请求的 url -->
 <form method="POST" action="{{ url }}">
@@ -35,3 +35,29 @@
     {% endfor %}
 </form>
 {% endmacro %}
+
+<!-- 分页组件 2个参数：pagination 对象和请求分页页面 url -->
+{% macro render_pagination(pagination, url) %}
+<nav class="nav-pagination" aria-label="Page navigation">
+    <ul class="pagination">
+        <!-- 链接到上一页的左箭头（&laquo;），如果没有上一页设为 disable 状态 -->
+        <li {% if not pagination.has_prev %} class="disabled" {% endif %}><a href="{{ url_for(url, page=pagination.prev_num) if pagination.has_prev else "#" }}">&laquo;</a></li>
+        <!-- 渲染每个页面的按钮 -->
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                <li><a href="{{ url_for(url, page=page) }}">{{ page }}</a></li>
+                {% else %}
+                <!-- 如果是当前页面就设置为选中状态 -->
+                <li class="active"><a href="#">{{ page }}<span class="sr-only">(current)</span></a></li>
+                {% endif %}
+            {% else %}
+            <li><span class="ellipsis">...</span></li>
+            {% endif %}
+        {% endfor %}
+        <!-- 链接到下一页的左箭头（&raquo;），如果没有下一页设为 disable 状态 -->
+        <li {% if not pagination.has_next %} class="disabled" {% endif %}><a href="{{ url_for(url, page=pagination.next_num) if pagination.has_next else "#" }}">&raquo;</a></li>
+    </ul>
+</nav>
+{% endmacro %}
+        

@@ -94,8 +94,9 @@ def delete_course(course_id):
 @admin.route('/users/<int:user_id>/delete')
 @admin_required
 def delete_user(user_id):
+    print(user_id)
     if current_user.id == user_id:
-        flash('用户不能自我删除', 'error')
+        flash('用户不能自我删除', 'info')
         return redirect(url_for('.users'))
     user = User.query.get_or_404(user_id)
     db.session.delete(user)

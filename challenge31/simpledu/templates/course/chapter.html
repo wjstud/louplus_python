@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %} {{ chapter.name }} {% endblock %}
+
+{% block head_css %}
+<!-- 使用 super 语法继承父 block 的 css 文件 -->
+{{ super() }}
+<!-- 引入 video-js.css CND 文件 -->
+<link href="http://vjs.zencdn.net/6.2.7/video-js.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<!-- 
+    视频要用 video 标签包裹 
+    video-js 是使用 video.js 必须的类
+    vjs-16-9 设置视频的显示比例为 16:9
+    vjs-big-play-centered 设置播放按钮居中，默认是在左上角 
+    
+    data-setup 中写入的是对 video.js 的配置，要用 JSON 格式。
+    fluid:true 表示视频大小填充满它被放入的 div，controls:true 表示显示控制按钮。
+-->
+<video class="video-js vjs-16-9 vjs-big-play-centered" data-setup='{"fluid": true, "controls": true}'>
+    <!-- 视频地址放入 source 中, 并设置好视频的类型 -->
+    <source src="{{ chapter.video_url }}" type='video/mp4'>
+</video>
+{% endblock %}
+
+{% block tail_js %}
+{{ super() }}
+<script src="http://vjs.zencdn.net/6.2.8/video.js"></script>
+{% endblock %}

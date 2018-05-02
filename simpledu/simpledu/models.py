@@ -88,3 +88,7 @@ class Chapter(Base):
 
     def __repr__(self):
         return '<Chapter: {}>'.format(self.name)
+
+    @property
+    def url(self):
+        return url_for('course.chapter', course_id=self.course.id, chapter_id=self.id)

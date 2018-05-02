@@ -11,7 +11,7 @@
     <div class="col-md-8">
         <div class="list-group">
             {% for chapter in course.chapters %}
-            <a class="list-group-item" href="#">
+            <a class="list-group-item" href="{{ chapter.url }}">
                 <!-- 标识视频播放的 icon -->
                 <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
                 <!-- 显示章节名称和视频的时长 -->

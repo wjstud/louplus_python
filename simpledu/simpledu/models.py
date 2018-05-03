@@ -92,3 +92,15 @@ class Chapter(Base):
     @property
     def url(self):
         return url_for('course.chapter', course_id=self.course.id, chapter_id=self.id)
+
+class Live(Base):
+    __tablename__ = 'live'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), unique=True, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='SET NULL'))
+    user = db.relationship('User', uselist=False)
+    url = db.Column(db.String(256))
+
+    def __repr__(self):
+        return '<Live: {}>'.format(self.name)

@@ -6,7 +6,7 @@
 {% block operation %}
 <a href="{{ url_for('admin.create_course') }}" type="button" class="btn btn-primary">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-    asdf添加课程
+    添加课程
 </a>
 {% endblock%}
 
@@ -20,8 +20,6 @@
             <th>操作</th>
         </tr>
         <tbody>
-
-
           {% for course in pagination.items %}
             <tr>
               <td>{{ course.id }}</td>
@@ -32,17 +30,48 @@
                   <a href="{{ url_for('admin.edit_course', course_id=course.id) }}" type="button" class="btn btn-default" title="编辑">
                     <span class="glyphicon glyphicon-pencil" title="编辑" aria-hidden="true"></span>
                   </a>
-                  <a href="{{ url_for('admin.delete_course', course_id=course.id) }}" type="button" class="btn btn-default" onclick="confirm('确定要删除该课程吗？')">
+                  <!-- <a href="{{ url_for('admin.delete_course', course_id=course.id) }}" type="button" class="btn btn-default" onclick="confirm('确定要删除该课程吗？')">
                     <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                  </a>
+                  </a>-->
+                  <button class="btn btn-default delete-course-btn" data-link="{{ url_for('admin.delete_course', course_id=course.id) }}" data-course-id="{{ course.id }}" data-toggle="modal" data-target="#myModal" title="删除">
+                      <span class="glyphicon glyphicon-trash" title="删除" aria-hidden="true"></span>
+                  </button>
                 </div>
               </td>
             </tr>
           {% endfor %}
-          
-
         </tbody>
     </thead>
 </table>
 {{ render_pagination(pagination, 'admin.courses') }}
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+                <h4 class="modal-title" id="myModalLabel"> 提示 </h4>
+            </div>
+            <div class="modal-body">
+                <p>您真的要删除吗？</p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" type="button" class="btn btn-primary delete-course">是</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+{% block js %}
+<script>
+$(function() {
+    $('.delete-course-btn').on('click', function() {
+        var courseId = $(this).data('courseId')
+        var deleteLink = $(this).data('link')
+        $('#myModal .course-id').text(courseId)
+        $('#myModal .delete-course').attr('href', deleteLink)
+    })
+});
+</script>
+{% endblock%}

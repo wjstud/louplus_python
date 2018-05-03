@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash
 from simpledu.decorators import admin_required
-from simpledu.models import Course, db, User
-from simpledu.forms import CourseForm, UserForm, RegisterForm
+from simpledu.models import Course, db, User, Live
+from simpledu.forms import CourseForm, UserForm, RegisterForm, LiveForm
 from flask_login import current_user
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -33,6 +33,17 @@ def users():
             )
     return render_template('admin/users.html', pagination=pagination)
 
+@admin.route('/lives')
+@admin_required
+def lives():
+    page = request.args.get('page', default=1, type=int)
+    pagination = Live.query.paginate(
+            page=page,
+            per_page=current_app.config['ADMIN_PER_PAGE'],
+            error_out=False
+            )
+    return render_template('admin/lives.html', pagination=pagination)
+
 @admin.route('/courses/create', methods=['GET', 'POST'])
 @admin_required
 def create_course():
@@ -52,6 +63,16 @@ def create_user():
         flash('用户创建成功', 'success')
         return redirect(url_for('.users'))
     return render_template('admin/create_user.html', form=form)
+
+@admin.route('/lives/create', methods=['GET', 'POST'])
+@admin_required
+def create_live():
+    form = LiveForm()
+    if form.validate_on_submit():
+        form.create_live()
+        flash('直播创建成功', 'success')
+        return redirect(url_for('.lives'))
+    return render_template('admin/create_live.html', form=form)
 
 @admin.route('/courses/<int:course_id>/edit', methods=['GET', 'POST'])
 @admin_required
@@ -82,6 +103,17 @@ def edit_user(user_id):
             return redirect(url_for('.users'))
     return render_template('admin/edit_user.html', form=form, user=user)
 
+@admin.route('/lives/<int:live_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def edit_live(live_id):
+    live = Live.query.get_or_404(live_id)
+    form = LiveForm(obj=live)
+    if form.validate_on_submit():
+        form.update_live(live)
+        flash('直播更新成功', 'success')
+        return redirect(url_for('.lives'))
+    return render_template('admin/edit_live.html', form=form, live=live)
+
 @admin.route('/courses/<int:course_id>/delete')
 @admin_required
 def delete_course(course_id):
@@ -103,3 +135,12 @@ def delete_user(user_id):
     db.session.commit()
     flash('用户删除成功', 'success')
     return redirect(url_for('.users'))
+
+@admin.route('/lives/<int:live_id>/delete')
+@admin_required
+def delete_live(live_id):
+    live = Live.query.get_or_404(live_id)
+    db.session.delete(live)
+    db.session.commit()
+    flash('直播删除成功', 'success')
+    return redirect(url_for('.lives'))

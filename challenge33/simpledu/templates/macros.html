@@ -1,0 +1,63 @@
+<!-- 表单 需要传人2个参数：要渲染的 form 和点击提交请求的 url -->
+{% macro render_form(form, url) %}
+<!-- 要在 form 里指定 POST 方法和点击提交后需要请求的 url -->
+<form method="POST" action="{{ url }}">
+    <!-- 将 csrf_token 渲染在表单开始的位置 -->
+    {{ form.csrf_token }}
+    <!--  迭代每个表单 field -->
+    {% for field in form %}
+    <!-- 如果是 csrf_token 就不在渲染了 -->
+    {% if field.type == 'CSRFTokenField' %}
+    {{ '' }}
+    <!-- SubmitField 单独特殊处理 -->
+    {% elif field.type == 'SubmitField' %}
+    <!-- 渲染提交按钮, 传人 Bootstrap 的按钮类 -->
+    {{ form.submit(class='btn btn-primary', type='submit') }}
+    <!-- BooleanField 的渲染有些特殊, 使用了 Bootstrap 的 checkbox 类 -->
+    {% elif field.type == 'BooleanField'%}
+    <div class="checkbox">
+        <!-- 注意这里获取的是 label 的text 属性, 也就是我们在表单中定义的“记住我”这个字符串 -->
+        <label>{{ field() }} {{ field.label.text }}</label>
+    </div>
+    {% else %}
+    <!-- 当 errors 不为空，添加 has-error 类，这样输入框就变成红色了-->
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+        {{ field.label }} {{ field(class="form-control") }}
+        {% if field.errors %} 
+          <!-- 当 errors 不为空，遍历显示每一个 error -->
+          {% for error in field.errors %}
+            <!-- 根据 Bootstrap 样式错误信息要显示先类为 help-block 的 span 标签中-->
+            <span class="help-block">{{ error }}</span>
+          {% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+</form>
+{% endmacro %}
+
+<!-- 分页组件 2个参数：pagination 对象和请求分页页面 url -->
+{% macro render_pagination(pagination, url) %}
+<nav class="nav-pagination" aria-label="Page navigation">
+    <ul class="pagination">
+        <!-- 链接到上一页的左箭头（&laquo;），如果没有上一页设为 disable 状态 -->
+        <li {% if not pagination.has_prev %} class="disabled" {% endif %}><a href="{{ url_for(url, page=pagination.prev_num) if pagination.has_prev else "#" }}">&laquo;</a></li>
+        <!-- 渲染每个页面的按钮 -->
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                <li><a href="{{ url_for(url, page=page) }}">{{ page }}</a></li>
+                {% else %}
+                <!-- 如果是当前页面就设置为选中状态 -->
+                <li class="active"><a href="#">{{ page }}<span class="sr-only">(current)</span></a></li>
+                {% endif %}
+            {% else %}
+            <li><span class="ellipsis">...</span></li>
+            {% endif %}
+        {% endfor %}
+        <!-- 链接到下一页的左箭头（&raquo;），如果没有下一页设为 disable 状态 -->
+        <li {% if not pagination.has_next %} class="disabled" {% endif %}><a href="{{ url_for(url, page=pagination.next_num) if pagination.has_next else "#" }}">&raquo;</a></li>
+    </ul>
+</nav>
+{% endmacro %}
+        

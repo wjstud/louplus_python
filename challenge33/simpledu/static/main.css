@@ -1,0 +1,25 @@
+.form {
+  width: 400px;
+  margin: 0 auto; /* 居中 */
+}
+/* 这段 css 代码的作用是去除超链接的下滑线，将课程名称和课程简介显示为一行，超出的部分显示为 ... */
+a,
+a:hover,
+a:visited {
+  text-decoration: none !important;
+}
+
+.course__name,
+.course__description {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap
+}
+.course img {
+  height: 160px !important;
+}
+/* 这段 css 代码的作用是去除超链接的下滑线，将课程名称和课程简介显示为一行，超出的部分显示为 ... */
+
+.nav-pagination {
+  text-align: center; /* 分页组件居中*/
+}

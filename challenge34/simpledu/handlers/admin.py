@@ -1,8 +1,10 @@
 from flask import Blueprint, render_template, request, current_app, redirect, url_for, flash
 from simpledu.decorators import admin_required
 from simpledu.models import Course, db, User, Live
-from simpledu.forms import CourseForm, UserForm, RegisterForm, LiveForm
+from simpledu.forms import CourseForm, UserForm, RegisterForm, LiveForm, MessageForm
 from flask_login import current_user
+import json
+from .ws import redis
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -143,3 +145,16 @@ def delete_user(user_id):
     db.session.commit()
     flash('用户删除成功', 'success')
     return redirect(url_for('.users'))
+
+@admin.route('/message', methods=['GET', 'POST'])
+@admin_required
+def send_message():
+    form = MessageForm()
+    if form.validate_on_submit():
+        redis.publish('chat', json.dumps(dict(
+            username='System',
+            text=form.text.data
+            )))
+        flash('系统消息发送成功', 'success')
+        return redirect(url_for('.index'))
+    return render_template('admin/message.html', form=form)

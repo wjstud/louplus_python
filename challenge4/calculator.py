@@ -74,7 +74,7 @@ config = Config()
 
 # 用户数据类
 class UserData(Process):
-"""通过继承 Process 类, 并实现 run 方法"""
+    # 通过继承 Process 类, 并实现 run 方法
     def __init__(self):
         self.userdata = self._read_users_data()
 
